@@ -1,4 +1,4 @@
-package pojoClasses.constants;
+package constants;
 
 public class HttpsMethods {
     public static final String URI = "https://stellarburgers.nomoreparties.site";

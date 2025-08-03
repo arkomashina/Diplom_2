@@ -1,4 +1,4 @@
-package pojoClasses.User;
+package pojoClasses.user;
 
 public class User {
 

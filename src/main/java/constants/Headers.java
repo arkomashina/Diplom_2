@@ -1,4 +1,4 @@
-package pojoClasses.constants;
+package constants;
 
 public class Headers {
 

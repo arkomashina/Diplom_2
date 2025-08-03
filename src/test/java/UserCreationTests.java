@@ -1,11 +1,11 @@
-import pojoClasses.User.User;
+import pojoClasses.user.User;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import pojoClasses.constants.Headers;
-import pojoClasses.constants.HttpsMethods;
+import constants.Headers;
+import constants.HttpsMethods;
 
 
 import static io.restassured.RestAssured.*;
