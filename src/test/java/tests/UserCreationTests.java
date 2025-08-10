@@ -1,28 +1,27 @@
+package tests;
+
 import pojoClasses.user.User;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import constants.Headers;
 import constants.HttpsMethods;
+import steps.UserSteps;
 
 
-import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 
 
 public class UserCreationTests {
 
     private String createdUserAccessToken;
+    private final UserSteps userSteps = new UserSteps();
 
     @After
     public void tearDown() {
         if (createdUserAccessToken != null) {
-            given()
-                    .header("Authorization", createdUserAccessToken)
-                    .when()
-                    .delete(HttpsMethods.DELETE_USER);
+            userSteps.deleteUser();
         }
     }
 
@@ -38,15 +37,11 @@ public class UserCreationTests {
                 "password",
                 "UniqueUser"
         );
-        Response response = given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(user)
-                .when()
-                .post(HttpsMethods.POST_CREATE_NEW_USER);
+        Response response = userSteps.registerUser(user);
 
-        response.then().statusCode(200).and().body("success", equalTo(true));
+        response.then().statusCode(200).body("success", equalTo(true));
 
-        createdUserAccessToken = response.then().extract().path("accessToken");
+        createdUserAccessToken = response.path("accessToken");
     }
 
     @Test
@@ -55,25 +50,13 @@ public class UserCreationTests {
         User user = new User(existingEmail, "password", "ExistingUser");
 
 
-        Response firstResponse = given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(user)
-                .when()
-                .post(HttpsMethods.POST_CREATE_NEW_USER);
-
+        Response firstResponse = userSteps.registerUser(user);
         firstResponse.then().statusCode(200);
-        createdUserAccessToken = firstResponse.then().extract().path("accessToken");
+        createdUserAccessToken = firstResponse.path("accessToken");
 
-
-        Response secondResponse = given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(user)
-                .when()
-                .post(HttpsMethods.POST_CREATE_NEW_USER);
-
-        secondResponse.then()
+        userSteps.registerUser(user)
+                .then()
                 .statusCode(403)
-                .and()
                 .body("message", equalTo("User already exists"));
     }
 
@@ -86,14 +69,9 @@ public class UserCreationTests {
                 null
         );
 
-        given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(incompleteUser)
-                .when()
-                .post(HttpsMethods.POST_CREATE_NEW_USER)
+        userSteps.registerUser(incompleteUser)
                 .then()
                 .statusCode(403)
-                .and()
                 .body("message", equalTo("Email, password and name are required fields"));
     }
 }

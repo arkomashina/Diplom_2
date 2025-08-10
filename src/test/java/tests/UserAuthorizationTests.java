@@ -1,4 +1,5 @@
-import constants.Headers;
+package tests;
+
 import constants.HttpsMethods;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
@@ -6,8 +7,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import pojoClasses.user.User;
+import steps.UserSteps;
 
-import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.*;
 
@@ -16,7 +17,7 @@ public class UserAuthorizationTests {
 
     private User user;
     private String accessToken;
-    private String refreshToken;
+    private final UserSteps userSteps = new UserSteps();
 
     @Before
     public void setUp() {
@@ -27,39 +28,30 @@ public class UserAuthorizationTests {
                 "AuthUser"
         );
 
-        Response registerResponse = given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(user)
-                .when()
-                .post(HttpsMethods.POST_CREATE_NEW_USER);
+        Response registerResponse = userSteps.registerUser(user);
 
-        registerResponse.then().statusCode(200).body("success", equalTo(true));
+        registerResponse.then()
+                .statusCode(200)
+                .body("success", equalTo(true));
+
         accessToken = registerResponse.path("accessToken");
-        refreshToken = registerResponse.path("refreshToken");
     }
 
     @After
     public void tearDown() {
         if (accessToken != null) {
-            given()
-                    .header(Headers.AUTHORIZATION, accessToken)
-                    .when()
-                    .delete(HttpsMethods.DELETE_USER)
-                    .then()
-                    .statusCode(202);
+            userSteps.deleteUser();
         }
     }
 
     @Test
     public void successfulLoginTest() {
-        Response loginResponse = given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(new User(user.getEmail(), user.getPassword(), null))
-                .when()
-                .post(HttpsMethods.POST_LOGIN_NEW_USER);
+        Response loginResponse = userSteps.loginUser(
+                new User(user.getEmail(), user.getPassword(), null)
+        );
 
-        loginResponse.then().statusCode(200)
-                .and()
+        loginResponse.then()
+                .statusCode(200)
                 .body("success", equalTo(true))
                 .body("user.email", equalTo(user.getEmail()));
 
@@ -78,14 +70,9 @@ public class UserAuthorizationTests {
     public void loginWithWrongPasswordTest() {
         User wrongPasswordUser = new User(user.getEmail(), "wrongPassword", null);
 
-        given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(wrongPasswordUser)
-                .when()
-                .post(HttpsMethods.POST_LOGIN_NEW_USER)
+        userSteps.loginUser(wrongPasswordUser)
                 .then()
                 .statusCode(401)
-                .and()
                 .body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));
     }
@@ -94,14 +81,9 @@ public class UserAuthorizationTests {
     public void loginMissingFieldTest() {
         User noPasswordUser = new User(user.getEmail(), null, null);
 
-        given()
-                .header(Headers.CONTENT_TYPE, Headers.APPLICATION_JSON)
-                .body(noPasswordUser)
-                .when()
-                .post(HttpsMethods.POST_LOGIN_NEW_USER)
+        userSteps.loginUser(noPasswordUser)
                 .then()
                 .statusCode(401)
-                .and()
                 .body("success", equalTo(false))
                 .body("message", equalTo("email or password are incorrect"));
     }
