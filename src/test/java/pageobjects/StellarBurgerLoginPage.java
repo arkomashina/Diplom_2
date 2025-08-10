@@ -12,20 +12,20 @@ public class StellarBurgerLoginPage {
     }
     //локатор для поля ввода Email
 
-    private By emailField = By.xpath(".//*[text() = 'Email']");
+    private final By emailField = By.xpath(".//*[text() = 'Email']");
 
     //локатор для поля ввода пароль
-    private By passwordField = By.xpath(".//*[text() = 'Пароль']");
+    private final By passwordField = By.xpath(".//*[text() = 'Пароль']");
 
     //локатор для кнопки Войти
 
-    private By enterButton = By.xpath(".//*[text() = 'Войти']");
+    private final By enterButton = By.xpath(".//*[text() = 'Войти']");
 
     //локатор для кнопки Регистрация
-    private By registerButton = By.xpath(".//*[text() = 'Зарегистрироваться']");
+    private final By registerButton = By.xpath(".//*[text() = 'Зарегистрироваться']");
 
     //локатор для кнопки Восстановить пароль
-    private By restorePasswordButton = By.xpath(".//*[text() = 'Восстановить пароль']");
+    private final By restorePasswordButton = By.xpath(".//*[text() = 'Восстановить пароль']");
 
     public boolean enterButtonIsDisplayed() {
         return driver.findElement(enterButton).isDisplayed();

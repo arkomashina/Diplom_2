@@ -10,9 +10,10 @@ public class StellarBurgerMainPage {
     private WebDriver driver;
 
 
-    // Локатор кнопки Личный кабинет
+    // Локатор кнопки Личный кабинет и Войти в аккаунт
 
-    private By personalAccountButton = By.xpath(".//p[text()='Личный Кабинет']");
+    private final By personalAccountButton = By.xpath(".//p[text()='Личный Кабинет']");
+    private final By enterAccountButton = By.xpath(".//button[@class = 'button_button__33qZ0 button_button_type_primary__1O7Bx button_button_size_large__G21Vg']");
 
     public StellarBurgerMainPage(WebDriver driver) {
         this.driver = driver;
@@ -20,6 +21,10 @@ public class StellarBurgerMainPage {
 
     public void clickOnPersonalAccount() {
         driver.findElement(personalAccountButton).click();
+    }
+
+    public void clickOnEnterAccountButton() {
+        driver.findElement(enterAccountButton).click();
     }
 
 

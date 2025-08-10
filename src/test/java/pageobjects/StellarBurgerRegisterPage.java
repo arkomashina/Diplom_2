@@ -8,7 +8,7 @@ public class StellarBurgerRegisterPage {
 
     private WebDriver driver;
 
-    public StellarBurgerRegisterPage(WebDriver driver){
+    public StellarBurgerRegisterPage(WebDriver driver) {
         this.driver = driver;
     }
 
@@ -26,7 +26,8 @@ public class StellarBurgerRegisterPage {
     // Локатор для кнопки Зарегистрироваться
     private final By registerButton = By.xpath(".//*[text() = 'Зарегистрироваться']");
 
-
+    // Локатор для кнопки Войти
+    private final By enterButtonFromRegistrationPage = By.xpath(".//*[text() = 'Войти']");
 
 
     public void enterName(String name) {
@@ -51,6 +52,10 @@ public class StellarBurgerRegisterPage {
 
     public void clickRegisterButton() {
         driver.findElement(registerButton).click();
+    }
+
+    public void clickEnterButton() {
+        driver.findElement(enterButtonFromRegistrationPage).click();
     }
 
     public void registration(String name, String email, String password) {
