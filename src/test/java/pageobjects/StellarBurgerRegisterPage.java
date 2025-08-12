@@ -3,6 +3,10 @@ package pageobjects;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class StellarBurgerRegisterPage {
 
@@ -38,20 +42,23 @@ public class StellarBurgerRegisterPage {
 
 
     public void enterEmail(String email) {
-        WebElement input = driver.findElement(emailField);
+        WebElement input = new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(emailField));
         input.click();
         input.sendKeys(email);
     }
 
     public void enterPassword(String password) {
-        WebElement input = driver.findElement(passwordField);
+        WebElement input = new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(passwordField));
         input.click();
         input.sendKeys(password);
-
     }
 
     public void clickRegisterButton() {
-        driver.findElement(registerButton).click();
+        new WebDriverWait(driver, Duration.ofSeconds(3))
+                .until(ExpectedConditions.elementToBeClickable(registerButton))
+                .click();
     }
 
     public void clickEnterButton() {

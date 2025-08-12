@@ -18,7 +18,7 @@ public class LoginTests {
     private StellarBurgerLoginPage loginPage;
     private StellarBurgerRegisterPage registerPage;
     private StellarBurgerRestorePasswordPage restorePasswordPage;
-    private String browser;
+
 
     @Before
     public void setUp() {
