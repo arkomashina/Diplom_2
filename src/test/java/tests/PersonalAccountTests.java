@@ -6,44 +6,36 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import pageobjects.StellarBurgerLoginPage;
-import pageobjects.StellarBurgerMainPage;
+import steps.PersonalAccountSteps;
 
 public class PersonalAccountTests {
 
     private WebDriver driver;
-    private StellarBurgerMainPage mainPage;
-    private StellarBurgerLoginPage loginPage;
+    private PersonalAccountSteps steps;
 
     @Before
     public void setUp() {
-        String browser = System.getProperty("browser", "yandex");
-        driver = BrowserFactory.getDriver(browser);
-
+        driver = BrowserFactory.getDriver(System.getProperty("browser", "yandex"));
         driver.manage().window().maximize();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-
-        mainPage = new StellarBurgerMainPage(driver);
-        loginPage = new StellarBurgerLoginPage(driver);
+        steps = new PersonalAccountSteps(driver);
+        steps.openMainPage();
     }
 
     @After
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        if (driver != null) driver.quit();
     }
 
     @Test
     public void checkNavigationToPersonalAccount() {
-        mainPage.clickOnPersonalAccount();
-        Assert.assertTrue("После клика на Личный кабинет не открылась страница входа", loginPage.enterButtonIsDisplayed());
+        steps.clickPersonalAccount();
+        Assert.assertTrue("После клика на Личный кабинет не открылась страница входа", steps.isEnterButtonDisplayed());
     }
 
     @Test
     public void shouldOpenConstructorWhenClickFromPersonalAccount() {
-        mainPage.clickOnPersonalAccount();
-        loginPage.clickConstructorButton();
-        Assert.assertTrue("Текст Соберите бургер отсутствует", mainPage.constructorLogoIsDisplayed());
+        steps.clickPersonalAccount();
+        steps.clickConstructorButton();
+        Assert.assertTrue("Текст Соберите бургер отсутствует", steps.isConstructorLogoDisplayed());
     }
 }

@@ -2,24 +2,23 @@ package tests;
 
 import factories.BrowserFactory;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import pageobjects.StellarBurgerMainPage;
+import steps.ConstructorSteps;
 
 public class ConstructorTests {
 
     private WebDriver driver;
-    private StellarBurgerMainPage mainPage;
+    private ConstructorSteps constructorSteps;
 
     @Before
     public void setUp() {
-        String browser = System.getProperty("browser", "yandex");
-        driver = BrowserFactory.getDriver(browser);
+        driver = BrowserFactory.getDriver(System.getProperty("browser", "yandex"));
         driver.manage().window().maximize();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-        mainPage = new StellarBurgerMainPage(driver);
+
+        constructorSteps = new ConstructorSteps(driver);
+        constructorSteps.openMainPage();
     }
 
     @After
@@ -31,40 +30,41 @@ public class ConstructorTests {
 
     @Test
     public void shouldOpenBunsSection() {
-        mainPage.clickFillingsTab();
-        mainPage.clickBunsTab();
-        Assert.assertTrue("Вкладка Булки не активна", mainPage.isBunsTabActive());
+        constructorSteps.clickFillingsTab();
+        constructorSteps.clickBunsTab();
+        constructorSteps.checkBunsTabIsActive();
     }
 
     @Test
     public void shouldOpenSaucesSection() {
-        mainPage.clickSaucesTab();
-        Assert.assertTrue("Вкладка Соусы не активна", mainPage.isSaucesTabActive());
+        constructorSteps.clickSaucesTab();
+        constructorSteps.checkSaucesTabIsActive();
     }
 
     @Test
     public void shouldShowBunsSectionWhenClickBunsTab() {
-        mainPage.clickSaucesTab();
-        mainPage.clickBunsTab();
-        Assert.assertTrue("Раздел Булки не виден", mainPage.isBunsHeaderVisible());
+        constructorSteps.clickSaucesTab();
+        constructorSteps.clickBunsTab();
+        constructorSteps.checkBunsHeaderIsVisible();
     }
 
     @Test
     public void shouldShowSaucesSectionWhenClickSaucesTab() {
-        mainPage.clickSaucesTab();
-        Assert.assertTrue("Раздел Соусы не виден", mainPage.isSaucesHeaderVisible());
+        constructorSteps.clickSaucesTab();
+        constructorSteps.checkSaucesHeaderIsVisible();
     }
 
     @Test
     public void shouldShowFillingsSectionWhenClickFillingsTab() {
-        mainPage.clickFillingsTab();
-        Assert.assertTrue("Раздел Начинки не виден", mainPage.isFillingsHeaderVisible());
+        constructorSteps.clickFillingsTab();
+        constructorSteps.checkFillingsHeaderIsVisible();
     }
 
     @Test
     public void shouldOpenFillingsSection() {
-        mainPage.clickFillingsTab();
-        Assert.assertTrue("Вкладка Начинки не активна", mainPage.isFillingsTabActive());
+        constructorSteps.clickFillingsTab();
+        constructorSteps.checkFillingsTabIsActive();
     }
+
 
 }

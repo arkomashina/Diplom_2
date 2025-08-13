@@ -6,58 +6,44 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import pageobjects.StellarBurgerLoginPage;
-import pageobjects.StellarBurgerMainPage;
-import pageobjects.StellarBurgerRegisterPage;
-
+import steps.RegistrationSteps;
 
 public class RegistrationTests {
     private WebDriver driver;
-    private StellarBurgerMainPage mainPage;
-    private StellarBurgerLoginPage loginPage;
-    private StellarBurgerRegisterPage registerPage;
-    private String browser;
-
+    private RegistrationSteps steps;
 
     @Before
     public void setUp() {
-        browser = System.getProperty("browser", "yandex");
-        driver = BrowserFactory.getDriver(browser);
+        driver = BrowserFactory.getDriver(System.getProperty("browser", "yandex"));
         driver.manage().window().maximize();
-        driver.get("https://stellarburgers.nomoreparties.site/");
-
-        mainPage = new StellarBurgerMainPage(driver);
-        loginPage = new StellarBurgerLoginPage(driver);
-        registerPage = new StellarBurgerRegisterPage(driver);
+        steps = new RegistrationSteps(driver);
+        steps.openMainPage();
     }
 
     @After
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        if (driver != null) driver.quit();
     }
 
     @Test
     public void successfulRegistrationTest() {
-        mainPage.clickOnPersonalAccount();
-        loginPage.clickRegisterButton();
+        steps.clickPersonalAccount();
+        steps.clickRegisterButton();
 
         String email = "user" + System.currentTimeMillis() + "@test.com";
-        registerPage.registration("Иван Иванов", email, "123456");
+        steps.registerUser("Иван Иванов", email, "123456");
 
-        Assert.assertTrue("Кнопка 'Войти' не отображается", loginPage.enterButtonIsDisplayed());
+        Assert.assertTrue("Кнопка 'Войти' не отображается", steps.isEnterButtonDisplayed());
     }
-
 
     @Test
     public void registrationWithShortPasswordShowsError() {
-        mainPage.clickOnPersonalAccount();
-        loginPage.clickRegisterButton();
+        steps.clickPersonalAccount();
+        steps.clickRegisterButton();
 
         String email = "user" + System.currentTimeMillis() + "@test.com";
-        registerPage.registration("Иван Иванов", email, "123");
+        steps.registerUser("Иван Иванов", email, "123");
 
-        Assert.assertTrue("Ошибка о коротком пароле не отображается", registerPage.wrongPasswordIsDisplayed());
+        Assert.assertTrue("Ошибка о коротком пароле не отображается", steps.isWrongPasswordDisplayed());
     }
 }
